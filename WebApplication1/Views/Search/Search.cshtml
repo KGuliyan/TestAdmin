@@ -1,0 +1,65 @@
+﻿
+@*@model IEnumerable<WebApplication1.Models.Institution>*@
+@model WebApplication1.Models.InstitutionViewModel
+@{
+    ViewBag.Title = "Поиск образовательной организации";
+}
+
+<h2>Поиск образовательной организации</h2>
+
+@*<input class="form-control" />
+<button class="btn btn-light btn-lg" type="submit">Search<</button>*@
+@using (Html.BeginForm("Results", "Search", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+<div class="form-group">
+    @Html.LabelFor(i => i.InstitutionID, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(i => i.InstitutionID, new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(i => i.FullName, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(i => i.FullName, new { @class = "form-control" })
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" class="btn btn-default" value="Найти" />
+    </div>
+</div>
+}
+
+<h3>
+    @ViewBag.InstitutionCount
+</h3>
+
+
+<table class="table">
+
+        
+    @foreach (var item in ViewBag.InstitutionInfo)
+    { 
+        <tr>
+            <td>
+                @item.InstitutionID;
+            </td>
+            <td>
+                @item.FullName
+                <p>@Html.ActionLink("Вступительные испытания", "EditInstitutionInfo", new { id = item.InstitutionID })</p> 
+            </td>
+            <td>
+                @item.BriefName
+                <p>@Html.ActionLink("Приемные кaмпании", "Campaign", new { id = item.InstitutionID })</p>
+            </td>
+            <td>
+            </td>
+            <td>
+               
+            </td>
+        </tr>
+    }
+    </table>

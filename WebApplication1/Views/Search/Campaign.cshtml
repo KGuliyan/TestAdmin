@@ -1,0 +1,172 @@
+﻿@model WebApplication1.Models.Campaign
+
+@{
+    ViewBag.Title = "Campaign";
+}
+
+<h2>Приемные кампании</h2>
+@using (Html.BeginForm())
+{
+
+@*<form method="post">*@
+    <p>
+        @Html.DropDownList("dates", ViewBag.dates as SelectList, ViewBag.SelectedYear as string, new { @class = "form-control" })
+        @*@Html.DropDownList("dates", ViewBag.dates as SelectList, selectDa, new { @class = "form-control" })*@
+    </p>
+
+    @*@foreach (var item in ViewBag.compGroupsInfo)
+        {
+    <input type="hidden" value=@item.InstitutionID name="inst" />}*@
+
+    
+    @Html.TextBox("txtValue", null, new { type = "hidden" })
+
+    <button id="filter" class="btn btn-outline-primary">Поиск по году</button>
+@*</form>*@
+
+
+
+
+    @Html.AntiForgeryToken()
+
+    
+        <table class="table table-borderless">
+       
+                <tr>
+                    @*<th scope="col"></th>
+                    <th scope="col">Идентификатор ОО</th>
+                    <th scope="col">Идентификатор Прикрепления</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Дата изменения</th>*@
+                </tr>
+         
+
+                @foreach (var item in ViewBag.campaigns)
+                {
+                    string color = "#FFFFFF;";
+                    string color1 = "#FFFFFF;";
+                    string color2 = "#FFFFFF;";
+
+                    if (Model.CampaignID == item.CampaignID)
+                    {
+                        if (Model.EducationFormFlag != 0 && item.EducationFormFlag == Model.EducationFormFlag )
+                        {
+                            color = "#66CC99;";
+                        }
+
+                        if (Model.StatusID != 0 && item.StatusID == Model.StatusID )
+                        {
+                            color1 = "#66CC99;";
+                        }
+
+                        if (Model.CampaignTypeID != 0 && item.CampaignTypeID == Model.CampaignTypeID )
+                        {
+                            color2 = "#66CC99;";
+                        }
+                    }
+
+
+
+
+
+
+
+                     <th><strong>Название ПК</strong></th>
+
+                        <td>
+                            @item.Name
+                        </td>
+            <tbody >
+                @*<tr>
+                <td>
+                    <input value=@item.InstitutionID name="InstitutionID" />
+                    <input type="submit" value="Сохранить" class="btn btn-sm" id="submitButton" />
+                </td>
+            </tr>*@
+                <tr >
+                    <th><strong>Дата начала</strong></th>
+                    <td>
+
+                        <input value=@item.YearStart name="YearStart" class = "form-control" />
+                    
+
+                    </td>
+                </tr>
+                <tr>
+                    <th><strong>Дата окончания</strong></th>
+                    <td>
+                        <input value=@item.YearEnd name="YearEnd" class = "form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th ><strong>Форма</strong></th>
+                    <td style="background-color: @color">
+                        @Html.DropDownList("EduForm", ViewBag.EduForm as SelectList, @item.EducationFormName as string,
+                       new { @class = "form-control",  @name="EducationFormFlag"})
+                        @*@html.dropdownlistfor(m => m.educationformflag, viewbag.eduform as selectlist,
+                       @item.educationformname as string, new { @class = "form-control" , @value= item.educationformflag })*@
+                      
+
+                        @*<input value=@item.EducationFormName name="EducationFormFlag" />*@
+                    </td>
+                </tr>
+
+                <tr>
+                    <th><strong>Тип</strong></th>
+                    <td style="background-color: @color2">
+                        @*@Html.DropDownListFor(m => m.CampaignTypeID, ViewBag.CmgTypeName as SelectList, 
+                       @item.CampaignTypeName as string, new { @class = "form-control"})*@ 
+                   
+                        @Html.DropDownList("CmgnTypes", ViewBag.CmgTypeName as SelectList, @item.CampaignTypeName as string,
+                       new { @class = "form-control", @name="CampaignTypeID" , @style = "background-color: @color" })
+                        @*<input value=@item.CampaignStatusName name="StatusID" />*@
+                    </td>
+                </tr>
+                <tr>
+                 
+                    
+                    <th><strong>Статус</strong></th>
+                    <td style="background-color: @color1">
+                        @*<label>@item.CampaignTypeName</label>*@ 
+                        @Html.DropDownList("StsName", ViewBag.StsName as SelectList, @item.CampaignStatusName as string,
+                       new { @class = "form-control", @name="StatusID" })
+                    @*@Html.DropDownListFor(m => m.StatusID, ViewBag.StsName as SelectList, 
+                   @item.CampaignStatusName as string, new { @class = "form-control" })*@
+              
+                        @*<input value=@item.CampaignTypeName name="CampaignTypeID" />*@
+                    </td>
+                </tr>
+                <tr>
+                    <td >
+                        <input type="hidden" value=@item.CampaignID name="CampaignID" />
+                        @*<input type="hidden" value=@item.CampaignTypeID name="CampaignTypeID" />
+                        <input type="hidden" value=@item.CampaignTypeName name="CampaignTypeName" />
+                        <input type="hidden" value=@item.EducationFormFlag name="EducationFormFlag" />
+                        <input type="hidden" value=@item.EducationFormName name="EducationFormName" />
+                        <input type="hidden" value=@item.StatusID name="StatusID" />
+                        <input type="hidden" value=@item.CampaignStatusName name="CampaignStatusName" />
+                    
+                        <input type="hidden" value=@item.Name name="Name" />
+                        <input type="hidden" value=@item.InstitutionID name="InstitutionID" />*@
+
+                        <input type="submit" value="Сохранить" name ="save" class="btn btn-outline-primary">
+                    </td>
+                </tr>
+               </tbody>
+
+
+
+                @*@Html.TextBoxFor(m => m.InstitutionID, new { @Value = Model.InstitutionID.ToString() })*@
+                }
+
+
+
+
+</table>
+       
+}
+
+<div>
+    @Html.ActionLink("Назад к поиску", "Search")
+</div>
+
