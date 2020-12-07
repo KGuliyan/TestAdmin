@@ -19,7 +19,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-
+        //Метод считает количество ОО, передает модель в View 
         public ActionResult Search()
         {
 
@@ -35,6 +35,8 @@ namespace WebApplication1.Controllers
             InstitutionViewModel vmm = new InstitutionViewModel();
             return View(vmm);
         }
+
+        // метод принимает модель с заполненными полями InstitutionID и FullName, по которым осуществляет поиск ОО
         public ActionResult Results(InstitutionViewModel model)
 
         {
@@ -74,12 +76,15 @@ namespace WebApplication1.Controllers
             return View("Search");
         }
 
-        public ActionResult EditInstitutionInfo(int id, int entrTestID = 0, int dateInt = 0)
+
+        // Метод для отображения ВИ 
+        public ActionResult EditEntrTestItem(int id, int entrTestID = 0, int dateInt = 0)
         {
             //ViewBag.institutionEditInfo = new List<Institution>();
             ViewBag.FormEtID = entrTestID;
 
             int InstitutionId = id;
+
 
             List<int> CompetitiveGroupDates = new List<int>();
 
@@ -116,13 +121,13 @@ namespace WebApplication1.Controllers
 
             if (dateInt != 0)
             {
-                sqlFirst += " AND DATEPART(YEAR, CompetitiveGroup.CreatedDate) = " + dateInt;
+                sqlFirst += " AND DATEPART(YEAR, CompetitiveGroup.CreatedDate) = @date ";
             }
 
             string sqlSearchDate = @"SELECT DISTINCT DATEPART(YEAR, CreatedDate) AS CompetitiveYear FROM CompetitiveGroup WHERE CompetitiveGroup.InstitutionID = @InstitutionId";
 
             InfoFromDB<InstitutionFullInfo<int>> cmpGrpInfo = new InfoFromDB<InstitutionFullInfo<int>>();
-            cmpGrpInfo.Request(sqlFirst, InstitutionId);
+            cmpGrpInfo.Request(sqlFirst, InstitutionId, "", dateInt);
             compGroupsInfo = cmpGrpInfo.Result;
 
             InfoFromDB<int> cmpGrpDates = new InfoFromDB<int>();
@@ -142,17 +147,20 @@ namespace WebApplication1.Controllers
             }
             ViewBag.compGroupsInfo = compGroupsInfo;
 
-            return View("EditInstitutionInfo");
+            return View("EditEntrTestItem");
         }
 
+        // Изменение мин балла ВИ 
         [HttpPost]
-        public ActionResult EditInstitutionInfo(int id, InstitutionFullInfo<int> EntranceTestItemCInfo, FormCollection form)
+        public ActionResult EditEntrTestItem(int id, InstitutionFullInfo<int> EntranceTestItemCInfo, FormCollection form, string submitButton, string deleteEntrTestItem)
         {
             ViewBag.institutionEditInfo = new List<InstitutionFullInfo<int>>();
-            int rowsAffected = 2;
-            //int id = EntranceTestItemCInfo.InstitutionID;
+            InfoFromDB<int> editEntrTestItem = new InfoFromDB<int>();
+            string editMinscore = "";
 
-            //int instid = int.Parse(form["InstitutionID"]);
+
+            int rowsAffected = 2;
+         
             int selectDate = 0;
 
             if (form.AllKeys.Contains("Dates"))
@@ -160,25 +168,41 @@ namespace WebApplication1.Controllers
                 int dateInt = int.Parse(form["Dates"]);
                 selectDate = dateInt;
             }
+            ////// Удаление пока не реализовано
+            string removeEntrTestItem = @"";
 
-            string sqlQuery = "UPDATE EntranceTestItemC set MinScore='" + EntranceTestItemCInfo.MinScore +
-                       "' WHERE EntranceTestItemC.EntranceTestItemID=" + EntranceTestItemCInfo.EntranceTestItemID;
+            if (deleteEntrTestItem != null)
+            {
+                editEntrTestItem.ChangeInfo(removeEntrTestItem);
+                return RedirectToAction("EditInstitutionInfo", "Search");
+            }
 
-            InfoFromDB<int> editMinScore = new InfoFromDB<int>();
-            editMinScore.ChangeInfo(sqlQuery);
-            rowsAffected = editMinScore.rowsAffected;
 
-            //ViewBag.BackgroundColor = "#FFFFFF";
+            // По нажатию на кнопку "submitButton" изменяется мин балл ВИ
+            if (submitButton != null)
+            {
+
+               editMinscore = "UPDATE EntranceTestItemC set MinScore='" + EntranceTestItemCInfo.MinScore +
+                         "' WHERE EntranceTestItemC.EntranceTestItemID=" + EntranceTestItemCInfo.EntranceTestItemID;
+
+
+                editEntrTestItem.ChangeInfo(editMinscore);
+                rowsAffected = editEntrTestItem.rowsAffected;
+            }
+
+            
+
+             //редирект с измененными полями ВИ
             if (selectDate != 0 && rowsAffected == 1 || rowsAffected == 1)
             {
-                ViewBag.BackgroundColor = "#66CC99";
-                return RedirectToAction("EditInstitutionInfo", "Search",
+                //ViewBag.BackgroundColor = "#66CC99";
+                return RedirectToAction("EditEntrTestItem", "Search",
                     new { id = id, dateInt = EntranceTestItemCInfo.CreatedDate, entrTestID = EntranceTestItemCInfo.EntranceTestItemID });
 
             } else if (selectDate != 0)
 
             {
-                return RedirectToAction("EditInstitutionInfo", "Search", new { id = id, dateInt = selectDate });
+                return RedirectToAction("EditEntrTestItem", "Search", new { id = id, dateInt = selectDate });
             }
 
 
@@ -187,15 +211,17 @@ namespace WebApplication1.Controllers
             //Redirect("/Search/EditInstitutionInfo/" + id);
 
 
-            return RedirectToAction("EditInstitutionInfo");
+            return RedirectToAction("EditEntrTestItem");
         }
 
-
+        // Метод для отображения информации по ПК
         public ActionResult Campaign(int id, string edForm, string stName, string cmgType, int cmpnID = 0, int selectDate = 0)
         {
             Campaign comp = new Campaign();
 
             comp.CampaignID = cmpnID;
+
+            //В модель Campaign записываются данные из DropDownList (если выбраны)
 
             if (!String.IsNullOrEmpty(edForm)) {
                 comp.EducationFormFlag = int.Parse(edForm);
@@ -215,16 +241,15 @@ namespace WebApplication1.Controllers
 
 
             ViewBag.campaigns = ViewBag.CmgTypeName = ViewBag.StsName = new List<Campaign>();
-            //ViewBag.CmgTypeName = new List<Campaign>();
-            //ViewBag.StsName = new List<Campaign>();
+            
 
             var Campaigns = new List<Campaign>();
             var CmgnTypes = new List<CampaignTypes>();
             var EduForm = new List<EducationForm>();
             var StsName = new List<CampaignStatus>();
             var Dates = new List<int>();
-            //List<InstitutionFullInfo> Institution = new List<InstitutionFullInfo>();
-            //var Dates = new List<Campaign>(); ;
+
+
             string sqlDates = " SELECT DISTINCT DATEPART(YEAR, CreatedDate) FROM Campaign ";
 
             string sqlCmgn = @"  SELECT * FROM Campaign   
@@ -234,14 +259,16 @@ namespace WebApplication1.Controllers
 
             string sqlStsName = @"SELECT c.StatusID, c.Name FROM CampaignStatus c";
 
+
             if (selectDate != 0)
             {
                 sqlCmgn += " AND YearStart =" + selectDate;
+                //cmd.AddWithValue("@InstitutionID", ID);
             }
 
             string sqlCmgnTypes = @"  SELECT * FROM CampaignTypes";
 
-
+            // Отдельные запросы на данные из Campaign и справочников
             InfoFromDB<Campaign> allCampagns = new InfoFromDB<Campaign>();
             allCampagns.Request(sqlCmgn, id);
             Campaigns = allCampagns.Result;
@@ -249,7 +276,7 @@ namespace WebApplication1.Controllers
             InfoFromDB<CampaignTypes> allCmgnTypes = new InfoFromDB<CampaignTypes>();
             allCmgnTypes.Request(sqlCmgnTypes);
             CmgnTypes = allCmgnTypes.Result;
-
+            
             InfoFromDB<EducationForm> allEduForm = new InfoFromDB<EducationForm>();
             allEduForm.Request(sqlEduForms);
             EduForm = allEduForm.Result;
@@ -276,6 +303,8 @@ namespace WebApplication1.Controllers
             ViewBag.dates = dates;
 
 
+
+            //Формирование одного листа по данным из Campaign и справочников по Id 
             var cmgnJoins = Campaigns.Join(CmgnTypes, c => c.CampaignTypeID, s => s.CampaignTypeID, (c, s) =>
             {
                 c.CampaignTypeName = s.Name;
@@ -313,10 +342,15 @@ namespace WebApplication1.Controllers
             return View(comp);
         }
 
+
+        //Изменение формы, типа, статуса ПК
         [HttpPost]
-        public ActionResult Campaign(int id, Campaign comp, FormCollection form, string save, string EduForm, string StsName, string CmgnTypes, int selectDate = 0)
+        public ActionResult Campaign(int id, Campaign comp, FormCollection form, string save, string EduForm, string StsName, string CmgnTypes, string deleteCmp, int selectDate = 0)
         {
             int rowsAffected = 0;
+
+            InfoFromDB<int> editCampaign = new InfoFromDB<int>();
+
 
             string date = form["dates"];
             if (form.AllKeys.Contains("dates") && !String.IsNullOrEmpty(date))
@@ -324,7 +358,21 @@ namespace WebApplication1.Controllers
                 selectDate = int.Parse(date);
             }
 
-            string sqlQuery = @"UPDATE Campaign SET ";
+            //удаление не реализовано
+            string sqlDelete = @"DELETE Campaign WHERE CampaignID = @CmpgnID";
+
+            if (!String.IsNullOrEmpty(deleteCmp))
+            {
+                editCampaign.ChangeInfo(sqlDelete, comp.CampaignID);
+          
+                return RedirectToAction("Campaign", "Search", new { id = id, selectDate = selectDate });
+            }
+
+
+
+            if (save != null)
+            {
+                string sqlQuery = @"UPDATE Campaign SET ";
 
 
 
@@ -353,20 +401,16 @@ namespace WebApplication1.Controllers
 
             sqlQuery += " WHERE Campaign.CampaignID = " + comp.CampaignID;
 
-
-            InfoFromDB<int> editCampaign = new InfoFromDB<int>();
-
-            if (save != null)
-            {
                 editCampaign.ChangeInfo(sqlQuery);
                 rowsAffected = editCampaign.rowsAffected;
             }
 
 
 
+
             if (rowsAffected > 0 || selectDate > 0)
             {
-                ViewBag.BackgroundColor = "#66CC99";
+                //ViewBag.BackgroundColor = "#66CC99";
                 return RedirectToAction("Campaign", "Search",  
                     new { id = id, selectDate = selectDate, edForm = EduForm, stName = StsName, cmgType = CmgnTypes, cmpnID = comp.CampaignID });
             }
@@ -375,6 +419,93 @@ namespace WebApplication1.Controllers
 
         }
 
+        public ActionResult CompetitiveGroup(int id)
+        {
+            var cg = new CompetitiveGroup();
+            
+
+            ViewBag.compGroups = new List<CompetitiveGroup>();
+            ViewBag.foundCg = "false";
+
+
+
+            return View(cg);
+        }
+
+        //Изменение КГ
+        [HttpPost]
+        public ActionResult CompetitiveGroup(int id, CompetitiveGroup cg)
+        {
+            
+            ViewBag.compGroups = new List<CompetitiveGroup>();
+            var compGroups = new List<CompetitiveGroup>();
+
+            string findCmpGrps = @"SELECT * FROM CompetitiveGroup 
+                                    WHERE InstitutionID = @InstitutionID 
+                                    AND Name LIKE '%' + @Name +'%'";
+
+            //string findCmpGrps = @"SELECT COUNT(CompetitiveGroupID) FROM CompetitiveGroup 
+            //                        WHERE InstitutionID = @InstitutionID 
+            //                        AND Name LIKE '%' + @Name +'%'";
+
+
+            string sqlAdmsn = @"SELECT * FROM AdmissionItemType";
+            string sqlDirection = @"SELECT * FROM Direction";
+
+            var compGroupsInfo = new InfoFromDB<CompetitiveGroup>();
+            compGroupsInfo.Request(findCmpGrps, id, cg.Name);
+            compGroups = compGroupsInfo.Result;
+           
+            
+
+
+            InfoFromDB<AmissionItemType> allAdmItems = new InfoFromDB<AmissionItemType>();
+            allAdmItems.Request(sqlAdmsn);
+            var edLevel = allAdmItems.Result;
+            var edForm = allAdmItems.Result;
+
+      
+
+            InfoFromDB<Direction> allDirection = new InfoFromDB<Direction>();
+            allDirection.Request(sqlDirection);
+            var direction = allDirection.Result;
+
+            var CompetitiveGroups = compGroups.Join(edLevel, c => c.EducationLevelID, e => e.ItemTypeID, (c, e) =>
+            {
+                c.EducationLevelName = e.Name;
+                return c;
+            }).Join(edForm, c => c.EducationFormId, ef => ef.ItemTypeID, (c, ef) =>
+            {
+                c.EducationFormName = ef.Name;
+                return c;
+            }).Join(direction, c => c.DirectionID, d => d.DirectionID, (c, d) =>
+            {
+                c.DirectionName = d.Name;
+                return c;
+            }).ToList();
+
+            var eduForm = edForm.Select(i => i.ItemLevel == 2);
+
+            SelectList eduFormName = new SelectList(edForm, "ItemTypeID", "Name");
+            ViewBag.eduFormName = eduFormName;
+
+
+
+            ViewBag.compGroups = CompetitiveGroups;
+
+            if (Enumerable.Any(ViewBag.compGroups))
+            {
+                ViewBag.foundCg = "";
+            }
+
+
+            // ViewBag.compGroups = compGroupsInfo.Result;
+
+            return View();
+        }
+
+
+        //Класс для формирования запросов к БД
         public class InfoFromDB<T>
         {
 
@@ -384,24 +515,33 @@ namespace WebApplication1.Controllers
 
 
 
-            public void Request ( string sql, int id = 0, string institutionName = "")
+            public void Request ( string sql, int id = 0, string Name = "", int date = 0)
             {
                 using (IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionDB"].ConnectionString))
                 {
-                    Result = db.Query<T>(sql, new { InstitutionID = id, Name = institutionName }).ToList();             
+                    Result = db.Query<T>(sql, new { InstitutionID = id, Name = Name, date = date }).ToList();             
                 }
 
             }
 
-            public void ChangeInfo(string sql)
+            public void ChangeInfo(string sql, int cmpID = 0)
             {
-               
                 using (IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionDB"].ConnectionString))
                 {
-                    rowsAffected = db.Execute(sql);
+                    if (cmpID > 0)
+                    {
+                        rowsAffected = db.Execute(sql, new { CmpgnID = cmpID });
+                        
+                    }
+                    else
+                    {
+                        rowsAffected = db.Execute(sql);
+                    }
 
                 }
+                return;
             }
+
         }
 
     }

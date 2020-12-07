@@ -103,23 +103,15 @@
                     <td style="background-color: @color">
                         @Html.DropDownList("EduForm", ViewBag.EduForm as SelectList, @item.EducationFormName as string,
                        new { @class = "form-control",  @name="EducationFormFlag"})
-                        @*@html.dropdownlistfor(m => m.educationformflag, viewbag.eduform as selectlist,
-                       @item.educationformname as string, new { @class = "form-control" , @value= item.educationformflag })*@
-                      
 
-                        @*<input value=@item.EducationFormName name="EducationFormFlag" />*@
                     </td>
                 </tr>
 
                 <tr>
                     <th><strong>Тип</strong></th>
                     <td style="background-color: @color2">
-                        @*@Html.DropDownListFor(m => m.CampaignTypeID, ViewBag.CmgTypeName as SelectList, 
-                       @item.CampaignTypeName as string, new { @class = "form-control"})*@ 
-                   
                         @Html.DropDownList("CmgnTypes", ViewBag.CmgTypeName as SelectList, @item.CampaignTypeName as string,
                        new { @class = "form-control", @name="CampaignTypeID" , @style = "background-color: @color" })
-                        @*<input value=@item.CampaignStatusName name="StatusID" />*@
                     </td>
                 </tr>
                 <tr>
@@ -127,30 +119,17 @@
                     
                     <th><strong>Статус</strong></th>
                     <td style="background-color: @color1">
-                        @*<label>@item.CampaignTypeName</label>*@ 
                         @Html.DropDownList("StsName", ViewBag.StsName as SelectList, @item.CampaignStatusName as string,
                        new { @class = "form-control", @name="StatusID" })
-                    @*@Html.DropDownListFor(m => m.StatusID, ViewBag.StsName as SelectList, 
-                   @item.CampaignStatusName as string, new { @class = "form-control" })*@
-              
-                        @*<input value=@item.CampaignTypeName name="CampaignTypeID" />*@
                     </td>
                 </tr>
                 <tr>
                     <td >
                         <input type="hidden" value=@item.CampaignID name="CampaignID" />
-                        @*<input type="hidden" value=@item.CampaignTypeID name="CampaignTypeID" />
-                        <input type="hidden" value=@item.CampaignTypeName name="CampaignTypeName" />
-                        <input type="hidden" value=@item.EducationFormFlag name="EducationFormFlag" />
-                        <input type="hidden" value=@item.EducationFormName name="EducationFormName" />
-                        <input type="hidden" value=@item.StatusID name="StatusID" />
-                        <input type="hidden" value=@item.CampaignStatusName name="CampaignStatusName" />
-                    
-                        <input type="hidden" value=@item.Name name="Name" />
-                        <input type="hidden" value=@item.InstitutionID name="InstitutionID" />*@
-
-                        <input type="submit" value="Сохранить" name ="save" class="btn btn-outline-primary">
+                        <input type="submit" value="Удалить приемную кампанию" name="deleteCmp" class="btn btn-outline-primary">
+                        
                     </td>
+                    <td> <input type="submit" value="Сохранить изменения" name="save" class="btn btn-outline-primary"></td>
                 </tr>
                </tbody>
 

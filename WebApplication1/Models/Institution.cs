@@ -6,40 +6,28 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
 {
-    public class InstitutionFullInfo <T>
-    {
-       
-            public int InstitutionID { get; set; }
-            public string FullName { get; set; }
-            public string BriefName { get; set; }
-            //public virtual List<CompetitiveGroup> CompetitiveGroups { get; set; }
-            //public virtual List<EntranceTestItemC> EntranceTestItemCs { get; set; }
+public class InstitutionFullInfo <T>
+{
+        public int InstitutionID { get; set; }
+        public string FullName { get; set; }
+        public string BriefName { get; set; }
 
 
-             
-            public int CompetitiveGroupID { get; set; }
-            public string Name { get; set; }
-            public T CreatedDate { get; set; }
+
+        public int CompetitiveGroupID { get; set; }
+        public string Name { get; set; }
+        public T CreatedDate { get; set; }
 
 
-            public int EntranceTestItemID { get; set; }
-            public int MinScore { get; set; }
-
-            
-            public virtual List<Campaign> Campaigns { get; set; }
+        public int EntranceTestItemID { get; set; }
+        public int MinScore { get; set; }
 
 
-    //public int AccreditationID { get; set; }
-    //public string Accreditation { get; set; }
-    //public int AttachmentID { get; set; }
-
-    //public int LicenseID { get; set; }
-    //public string LicenseNumber { get; set; }
-    //public DateTime LicenseDate { get; set; }
-    //public DateTime ModifiedDate { get; set; }
+        public virtual List<Campaign> Campaigns { get; set; }
 
 
-}
+
+    }
 
     public class Campaign
     {
@@ -48,8 +36,10 @@ namespace WebApplication1.Models
         public string Name { get; set; }
         public int YearStart { get; set; }
         public int YearEnd { get; set; }
+
         public int EducationFormFlag { get; set; }
         public string EducationFormName { get; set; }
+
         public int StatusID { get; set; }
         public string CampaignStatusName { get; set; }
 
@@ -81,6 +71,45 @@ namespace WebApplication1.Models
         public string Name { get; set; }
 
     }
+
+    public class CompetitiveGroup
+    {
+        public string Name { get; set; }
+        public int CompetitiveGroupID { get; set; }
+        public int  InstitutionID { get; set; }
+        public int CampaignID { get; set; }
+
+        public int EducationLevelID { get; set; }
+        public string EducationLevelName { get; set; }
+
+        public int EducationFormId { get; set; }
+        public string EducationFormName { get; set; }
+
+        public int DirectionID { get; set; }
+        public string DirectionName { get; set; }
+
+
+
+    }
+
+    public class AmissionItemType
+    {
+        public string Name { get; set; }
+        public int ItemTypeID { get; set; }
+        public int ItemLevel { get; set; }
+
+    }
+
+    public class Direction
+    {
+        public string Name { get; set; }
+        public int DirectionID { get; set; }
+
+    }
+
+
+
+
 
 
     //public class Institution

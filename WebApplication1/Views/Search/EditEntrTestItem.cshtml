@@ -33,10 +33,6 @@
         @Html.DropDownList("Dates", ViewBag.Dates as SelectList, "Выбрать год", new { @class = "form-control" })
     </p>*@
 
-@using (Html.BeginForm("EditInstitutionInfo", "EditInstitutionInfo", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-}
 
 
 @{
@@ -52,58 +48,59 @@
 
 
 <h3>@message</h3>
-
 <table class="table table-borderless" style="opacity: @hide" >
     <tr>
         <th scope="col">Год</th>
-        <th scope="col">Название конкурсной группы</th>
-        <th scope="col">Идентификатор ВИ </th>
+        <th scope="col">Название вступительного испытания</th>
+        @*<th scope="col">Идентификатор ВИ </th>*@
         <th scope="col">Минимальный балл</th>
         
     </tr>
 
   
+@using (Html.BeginForm("EditEntrTestItem", "Search", FormMethod.Post))
+{
 
-  
-   
-@foreach (var item in ViewBag.compGroupsInfo)
+
+
+
+foreach (var item in ViewBag.compGroupsInfo)
 {
     string color = "#FFFFFF;";
     if (ViewBag.FormEtID != null && item.EntranceTestItemID == ViewBag.FormEtID)
     {
         color = "#66CC99;";
     }
-    
+
 
         <tr style="background-color: @color">
             
-
                 <td>@item.CreatedDate</td>
                 <td> @item.Name</td>
-                <td>@item.EntranceTestItemID</td>
 
+                @*<td>@item.EntranceTestItemID</td>*@
+           
                 <td>
-                    <form class="form-inline" method="post">
-                        @*<input type="hidden" value=@foreach (var eti in item.EntranceTestItemCs)
-                                                            { @eti.EntranceTestItemID}*@ 
+                
                         <input type="hidden" value=@item.EntranceTestItemID name="EntranceTestItemID" />
                         <input type="hidden" value=@item.InstitutionID name="InstitutionID" />
                         <input type="hidden" value=@item.CreatedDate name="CreatedDate" />
-                        @*<input class="form-control" value=@foreach (var eti in item.EntranceTestItemCs)
-                                                            { @eti.MinScore} name="MinScore" />*@
+                       
                         <input class="form-control" value=@item.MinScore name="MinScore" />
-                        <div class="form-group mx-sm-3 mb-2">
-                            <input type="submit" value="Сохранить" class="btn btn-sm" id="submitButton" />
-                        </div>
-                    </form>
-        </td>
+                    
+                            <input type="submit" value="Сохранить изменения" class="btn btn-sm" name="submitButton" />
+                   
                 
+        </td>
+                   
+            <td><input type="submit" value="Удалить ВИ " class="btn btn-sm" name="deleteEntrTestItem" /></td>
+            
 
 </tr>
- 
+
 
 }
- 
+}
 </table>
 
 @section Scripts {

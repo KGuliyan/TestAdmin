@@ -274,10 +274,11 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
-    <Content Include="Views\Search\EditInstitutionInfo.cshtml" />
+    <Content Include="Views\Search\EditEntrTestItem.cshtml" />
     <Content Include="Views\Search\SuccessfullEdit.cshtml" />
     <Content Include="Views\Search\View.cshtml" />
     <Content Include="Views\Search\Campaign.cshtml" />
+    <Content Include="Views\Search\CompetitiveGroup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
