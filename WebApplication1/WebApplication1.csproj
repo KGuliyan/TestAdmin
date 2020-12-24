@@ -194,22 +194,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppLogic\CampaignProcessor.cs" />
+    <Compile Include="AppLogic\CompetitiveGroupProcessor.cs" />
+    <Compile Include="AppLogic\EntrTestItemProcessor.cs" />
+    <Compile Include="AppLogic\InstitutionProcessor.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Classes\Values.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CampaignController.cs" />
+    <Compile Include="Controllers\CompetitiveGroupController.cs" />
+    <Compile Include="Controllers\EntrTestItemController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="DataAccess\SqlDataAccess.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DBModels\InstitutionDB.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Institution.cs" />
+    <Compile Include="Models\ViewModels\InstitutionView.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ViewModels\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -231,6 +242,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -274,11 +287,11 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
-    <Content Include="Views\Search\EditEntrTestItem.cshtml" />
     <Content Include="Views\Search\SuccessfullEdit.cshtml" />
     <Content Include="Views\Search\View.cshtml" />
-    <Content Include="Views\Search\Campaign.cshtml" />
-    <Content Include="Views\Search\CompetitiveGroup.cshtml" />
+    <Content Include="Views\Campaign\Campaign.cshtml" />
+    <Content Include="Views\CompetitiveGroup\CompetitiveGroup.cshtml" />
+    <Content Include="Views\EntrTestItem\EntrTestItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

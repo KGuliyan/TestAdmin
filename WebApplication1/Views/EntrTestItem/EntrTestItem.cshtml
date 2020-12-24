@@ -1,0 +1,66 @@
+﻿@model WebApplication1.Models.InstitutionFullInfo<int>
+
+<h2>Вступительные испытания конкурсной группы </h2>
+<div id="result"></div>
+<div>
+    @Html.ActionLink("Назад к конкурсным группам", "CompetitiveGroup", "CompetitiveGroup", new {id = Model.InstitutionID }, new { @style = "background-color: white;" })
+</div>
+
+
+<table class="table table-borderless" >
+    <tr>
+        <th scope="col">Год</th>
+        <th scope="col">Название вступительного испытания</th>
+        @*<th scope="col">Идентификатор ВИ </th>*@
+        <th scope="col">Минимальный балл</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+
+
+ 
+
+    @foreach (var item in ViewBag.compGroupsInfo)
+    {
+        string color = "#FFFFFF;";
+        if (ViewBag.FormEtID != null && item.EntranceTestItemID == ViewBag.FormEtID)
+        {
+            color = "#66CC99;";
+        }
+
+
+        <tr style="background-color: @color">
+
+            <td>@item.CreatedDate</td>
+            <td> @item.Name</td>
+
+            @*<td>@item.EntranceTestItemID</td>*@
+            <form method="post">
+                <td>
+
+                    <input type="hidden" value=@item.EntranceTestItemID name="EntranceTestItemID" />
+                    <input type="hidden" value=@item.InstitutionID name="InstitutionID" />
+                    <input type="hidden" value=@item.CreatedDate name="CreatedDate" />
+                    <input type="hidden" value=@item.CompetitiveGroupID name="CompetitiveGroupID" />
+
+                    <input class="form-control" value=@item.MinScore name="MinScore" />
+
+
+                </td>
+                <td><input type="submit" value="Сохранить изменения" class="btn btn-sm" name="submitButton" /></td>
+
+                <td><input type="submit" value="Удалить ВИ " class="btn btn-sm" name="deleteEntrTestItem" /></td>
+
+            </form>
+        </tr>
+
+    }
+
+
+</table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+}

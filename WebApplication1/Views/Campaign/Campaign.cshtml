@@ -25,6 +25,12 @@
 @*</form>*@
 
 
+    <div>
+        @Html.ActionLink("Назад к поиску", "Results", "Search", new { id = Model.InstitutionID }, new { @style = "background-color: white;" })
+    </div>
+
+
+
 
 
     @Html.AntiForgeryToken()
@@ -144,8 +150,4 @@
 </table>
        
 }
-
-<div>
-    @Html.ActionLink("Назад к поиску", "Search")
-</div>
 

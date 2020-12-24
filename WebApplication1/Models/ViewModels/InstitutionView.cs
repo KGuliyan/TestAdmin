@@ -25,9 +25,9 @@ public class InstitutionFullInfo <T>
 
         public virtual List<Campaign> Campaigns { get; set; }
 
-
-
     }
+
+
 
     public class Campaign
     {
@@ -45,9 +45,6 @@ public class InstitutionFullInfo <T>
 
         public int CampaignTypeID { get; set; }
         public string CampaignTypeName { get; set; }
-
-        //public IEnumerable<CampaignTypes> CampainsType { get; set; }
-
 
     }
 
@@ -78,6 +75,7 @@ public class InstitutionFullInfo <T>
         public int CompetitiveGroupID { get; set; }
         public int  InstitutionID { get; set; }
         public int CampaignID { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public int EducationLevelID { get; set; }
         public string EducationLevelName { get; set; }
@@ -92,7 +90,7 @@ public class InstitutionFullInfo <T>
 
     }
 
-    public class AmissionItemType
+    public class AdmissionItemType
     {
         public string Name { get; set; }
         public int ItemTypeID { get; set; }
@@ -154,6 +152,8 @@ public class InstitutionFullInfo <T>
         [Required]
         [Display(Name = "Название ОО")]
         public string FullName { get; set; }
+
+        public string BriefName { get; set; }
 
     }
 

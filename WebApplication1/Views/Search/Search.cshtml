@@ -33,9 +33,9 @@
 </div>
 }
 
-<h3>
+@*<h3>
     @ViewBag.InstitutionCount
-</h3>
+</h3>*@
 
 
 <table class="table">
@@ -56,9 +56,9 @@
                 
             </td>
             <td>
-                @Html.ActionLink("Вступительные испытания", "EditEntrTestItem", new { id = item.InstitutionID })
-                @Html.ActionLink("Приемные кaмпании", "Campaign", new { id = item.InstitutionID })
-                @Html.ActionLink("Конкурсные группы", "CompetitiveGroup", new { id = item.InstitutionID })
+                @*@Html.ActionLink("Вступительные испытания", "EditEntrTestItem", new { id = item.InstitutionID })*@
+                @Html.ActionLink("Приемные кaмпании", "Campaign", "Campaign", new { id = item.InstitutionID }, new { @color = "green" })
+                @Html.ActionLink("Конкурсные группы", "CompetitiveGroup", "CompetitiveGroup", new { id = item.InstitutionID }, new { @color = "green" })
             </td>
             <td>
                
